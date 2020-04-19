@@ -23,6 +23,8 @@ The simple way to set it up with the default configuration by running following 
     
     $ go generate
     
+Instead of build it from source yuu can download it from [release page](https://gitlab.com/softkot/gnome3_xinput_layout_switch/-/releases) and continue afterward.
+    
     $ sudo cp gnome-xinput-layout-switch /usr/bin/gnome-xinput-layout-switch
     
     $ echo /usr/bin/gnome-xinput-layout-switch \& | sudo tee /etc/X11/Xsession.d/99-gnome-xinput-layout-switch 
