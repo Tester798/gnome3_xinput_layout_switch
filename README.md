@@ -10,8 +10,8 @@ It uses *xinput* under the hood and runs gdbus call each time to switch between 
 ## Configuration
 Has command line arguments
 * *--debug* - dump all keyboard events to show key codes  
-* *--key1* - first key code to monitor (default: 37 [Ctrl])
-* *--key2* - second key code to monitor (default: 50 [Shift])
+* *--key1* - first key code to monitor (default: 37,105 [Ctrl])
+* *--key2* - second key code to monitor (default: 50,62 [Shift])
 
 ## Setup instructions:
 
@@ -33,6 +33,6 @@ Then remove or disable gnome builtin keyboard shortcuts and restart X11.
  
 P.S.
 
-* In case you want to change layout switch to Alt + Shift pass *--key1 64* argument.
+* In case you want to change layout switch to Alt + Shift pass *--key1 64,108* argument.
 
-* In case you want to change layout switch to Ctrl + Alt pass *--key2 64* argument.
+* In case you want to change layout switch to Ctrl + Alt pass *--key2 64,108* argument.
