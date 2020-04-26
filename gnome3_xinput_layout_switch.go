@@ -17,8 +17,10 @@ type EventData struct {
 }
 
 var debug = flag.Bool("debug", false, "Dump keyboard events")
-var key1 = flag.String("key1", "37", "First key code to monitor (default: 37 [Ctrl])")
-var key2 = flag.String("key2", "50", "Second key code to monitor (default: 50 [Shift])")
+var key1 = flag.String("key1", "37,105", "First key code to monitor (default: 37,105 [Ctrl])")
+var key2 = flag.String("key2", "50,62", "Second key code to monitor (default: 50,62 [Shift])")
+var key1Set = make(map[string]string)
+var key2Set = make(map[string]string)
 
 func dumpEvent(event *EventData) {
 	if *debug {
@@ -36,12 +38,12 @@ func processEvent(event EventData) {
 	}
 	if event.Type == "RawKeyPress" {
 		dumpEvent(&event)
-		if event.Detail == *key1 {
+		if len(key1Set[event.Detail]) > 0 {
 			key1Pressed = true
 			canSwitch = key2Pressed
 			return
 		}
-		if event.Detail == *key2 {
+		if len(key2Set[event.Detail]) > 0 {
 			key2Pressed = true
 			canSwitch = key1Pressed
 			return
@@ -51,13 +53,13 @@ func processEvent(event EventData) {
 	if event.Type == "RawKeyRelease" {
 		dumpEvent(&event)
 		doSwitch := false
-		if event.Detail == *key1 {
+		if len(key1Set[event.Detail]) > 0 {
 			if key2Pressed {
 				doSwitch = true
 			}
 			key1Pressed = false
 		}
-		if event.Detail == *key2 {
+		if len(key2Set[event.Detail]) > 0 {
 			if key1Pressed {
 				doSwitch = true
 			}
@@ -88,7 +90,12 @@ func processEvent(event EventData) {
 func main() {
 	flag.Parse()
 	cmd := exec.Command("xinput", "test-xi2", "--root")
-
+	for _, k := range strings.Split(*key1, ",") {
+		key1Set[k] = k
+	}
+	for _, k := range strings.Split(*key2, ",") {
+		key2Set[k] = k
+	}
 	reader, writer := io.Pipe()
 	cmd.Stdout = writer
 	go func() {
