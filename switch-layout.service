@@ -1,0 +1,12 @@
+[Unit]
+Description=Gnome layout switcher
+After=graphical.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/gnome-xinput-layout-switch --input=/dev/input/by-id/usb-I_One_Gaming_keyboard-if02-event-kbd --key1=29,97 --key2=42,54
+
+[Install]
+WantedBy=default.target

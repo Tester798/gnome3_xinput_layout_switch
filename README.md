@@ -10,6 +10,7 @@ It uses *xinput* under the hood and runs gdbus call each time to switch between 
 ## Configuration
 Has command line arguments
 * *--debug* - dump all keyboard events to show key codes  
+* *--input* - Direct input mode. File descriptor from /dev/input/*  
 * *--key1* - first key code to monitor (default: 37,105 [Ctrl])
 * *--key2* - second key code to monitor (default: 50,62 [Shift])
 
@@ -27,12 +28,28 @@ Instead of build it from source yuu can download it from [release page](https://
     
     $ sudo cp gnome-xinput-layout-switch /usr/bin/gnome-xinput-layout-switch
     
-    $ echo /usr/bin/gnome-xinput-layout-switch \& | sudo tee /etc/X11/Xsession.d/99-gnome-xinput-layout-switch 
+    $ echo /usr/bin/gnome-xinput-layout-switch \& | sudo tee /etc/X11/Xsession.d/99-gnome-xinput-layout-switch
+
+or for direct mode compatible with wayland  
+
+    $ mkdir -p $HOME/.local/share/systemd/user
+
+    $ sudo usermod -a -G input $USER
+    
+    $ cp switch-layout.service $HOME/.local/share/systemd/user/switch-layout.service
+
+    $ systemctl --user enable switch-layout
+
+When in Wayland mode use direct input mode and override key sets: 
+    
+    --input=/dev/input/event4 --key1=29,97 --key2=42,54
 
 Then remove or disable gnome builtin keyboard shortcuts and restart X11.   
- 
+      
 P.S.
 
 * In case you want to change layout switch to Alt + Shift pass *--key1 64,108* argument.
 
 * In case you want to change layout switch to Ctrl + Alt pass *--key2 64,108* argument.
+
+* any other case run with --debug flag and inspect ket codes
