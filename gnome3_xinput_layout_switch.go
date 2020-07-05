@@ -32,6 +32,7 @@ func dumpEvent(event *EventData) {
 	}
 }
 
+var currentLayout = 0
 var key1Pressed = false
 var key2Pressed = false
 var canSwitch = false
@@ -40,14 +41,24 @@ func switchLayout() {
 	if *debug {
 		log.Printf("Change layout\n")
 	}
-	layoutCmd := exec.Command("gdbus",
-		"call",
-		"--session",
-		"--dest", "org.gnome.Shell",
-		"--object-path", "/org/gnome/Shell",
-		"--method", "org.gnome.Shell.Eval",
-		"imports.ui.status.keyboard.getInputSourceManager()._mruSources[1].activate()",
-	)
+	layoutCmd := exec.Command("")
+	if currentLayout == 0 {
+		currentLayout = 1
+		layoutCmd = exec.Command("gsettings",
+			"set",
+			"org.gnome.desktop.input-sources",
+			"current",
+			"1",
+		)
+	} else {
+		currentLayout = 0
+		layoutCmd = exec.Command("gsettings",
+			"set",
+			"org.gnome.desktop.input-sources",
+			"current",
+			"0",
+		)
+	}
 	err := layoutCmd.Run()
 	if err != nil {
 		log.Printf("Unable to swithc layout:\n%v\n", err)
